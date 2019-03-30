@@ -3,11 +3,14 @@ import click
 import os
 import piccata
 import sys
+import logging
 sys.path.append(os.getcwd() + '/pc-nrfutil')
 
 from transport.tsocket import SocketTransport
 from nordicsemi.thread.dfu_thread import create_dfu_server
 from nordicsemi.dfu.package import Package
+
+logging.basicConfig(format='%(asctime)s %(message)s', level=2)
 
 def pause():
     while True:
