@@ -5,6 +5,7 @@ After=syslog.target network.target
 [Service]
 Environment="PKG=-pkg /etc/dfu/image.zip"
 ExecStart=/home/ubuntu/git/coap-dfu-server/coap-dfu-server.py $PKG
+Type=simple
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=coap-dfu-server

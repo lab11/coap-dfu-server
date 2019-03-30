@@ -4,6 +4,7 @@ import os
 import piccata
 import sys
 import logging
+import time
 sys.path.append(os.getcwd() + '/pc-nrfutil')
 
 from transport.tsocket import SocketTransport
@@ -14,11 +15,7 @@ logging.basicConfig(format='%(asctime)s %(message)s', level=2)
 
 def pause():
     while True:
-        try:
-            raw_input()
-        except (KeyboardInterrupt, EOFError):
-            break
-
+        time.sleep(5)
 @click.command(short_help="Update the firmware on a device over an IP connection.")
 @click.option('-pkg', '--package',
               help='Filename of the DFU package.',
