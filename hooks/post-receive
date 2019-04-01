@@ -1,0 +1,23 @@
+#!/bin/bash
+GIT_WORK_TREE="/home/ubuntu/permamote/"
+GIT_DIR="/home/ubuntu/permamote.git/"
+APP="/home/ubuntu/permamote/software/apps/permamote_coap/"
+BRANCH="master"
+
+while read oldrev newrev ref
+do
+	# only checking out the master (or whatever branch you would like to deploy)
+	if [ "$ref" = "refs/heads/$BRANCH" ];
+	then
+		echo "Ref $ref received. Deploying ${BRANCH} branch to production..."
+		git --work-tree=$GIT_WORK_TREE --git-dir=$GIT_DIR checkout -f $BRANCH
+		cd $GIT_WORK_TREE
+		git --work-tree=$GIT_WORK_TREE --git-dir=$GIT_DIR submodule update --init --recursive 
+		cd -
+		make -j 10 -C $APP pkg_signed
+		cp ${APP}_build/permamote_coap*.zip /etc/dfu/image.zip 
+	        sudo systemctl restart coap-dfu-server	
+	else
+		echo "Ref $ref received. Doing nothing: only the ${BRANCH} branch may be deployed on this server."
+	fi
+done
