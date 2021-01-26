@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  coap_dfu_server:
+    container_name: "coap-dfu-server"
+    hostname: "dfu"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+      args:
+        - REPO_URL=$REPO_URL
+        - GIT_SSH_KEY
+        - DFU_PUBLIC_KEY_C
+        - DFU_PRIVATE_KEY
+        - KEY_PATH
+    ports:
+      - "5683:5683"
+      - "5684:5684"
+    environment:
+      - APP_PATH=$APP_PATH
