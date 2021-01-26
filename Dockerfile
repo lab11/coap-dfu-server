@@ -30,6 +30,7 @@ RUN  cd /tmp \
 RUN pip3 install pip --upgrade
 
 RUN pip3 install \
+      github-webhook \
       nrfutil \
       piccata
 
@@ -45,4 +46,7 @@ RUN echo "${DFU_PUBLIC_KEY_C}" > ${KEY_PATH}/public.c
 RUN echo "${DFU_PRIVATE_KEY}"  > ${KEY_PATH}/private.pem
 
 COPY coap-dfu-server.py coap-server-dfu.py
+
+COPY dfu-webhook-endpoint.py dfu-webhook-endpoint.py
+
 
