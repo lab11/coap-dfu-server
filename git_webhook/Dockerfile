@@ -1,6 +1,6 @@
 FROM debian:10
 
-ENV APP_PATH ${APP_PATH}
+ARG APP_PATH
 ARG REPO_URL
 ARG GIT_SSH_KEY
 ARG KEY_PATH
@@ -40,13 +40,13 @@ RUN echo "${GIT_SSH_KEY}" > /root/.ssh/id_dfu_server \
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 RUN eval $(ssh-agent -s) && \
       ssh-add /root/.ssh/id_dfu_server && \
-      git clone --recursive ${REPO_URL}
+      git clone --recursive ${REPO_URL} repo
 
 RUN echo "${DFU_PUBLIC_KEY_C}" > ${KEY_PATH}/public.c
 RUN echo "${DFU_PRIVATE_KEY}"  > ${KEY_PATH}/private.pem
 
-COPY coap-dfu-server.py coap-server-dfu.py
+RUN cd "${APP_PATH}" && make -j 2 pkg_signed
 
 COPY dfu-webhook-endpoint.py dfu-webhook-endpoint.py
 
-
+ENTRYPOINT ["python3", "dfu-webhook-endpoint.py"]

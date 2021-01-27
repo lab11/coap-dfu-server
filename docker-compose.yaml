@@ -1,22 +1,42 @@
 version: '3.9'
 
 services:
-  coap_dfu_server:
-    container_name: "coap-dfu-server"
-    hostname: "dfu"
+  git_webhook:
+    container_name: "git_webhook"
+    hostname: "webhook"
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: git_webhook/Dockerfile
       network: host
       args:
-        - REPO_URL=$REPO_URL
+        - REPO_URL
         - GIT_SSH_KEY
         - DFU_PUBLIC_KEY_C
         - DFU_PRIVATE_KEY
         - KEY_PATH
+        - APP_PATH
     ports:
       - "80:80"
+    env_file:
+      - .env
+    volumes:
+      - repo:/root/repo
+
+  dfu_server:
+    container_name: "dfu_server"
+    hostname: "dfu"
+    build:
+      context: .
+      dockerfile: "dfu_server/Dockerfile"
+      network: host
+    ports:
       - "5683:5683"
       - "5684:5684"
-    environment:
-      - APP_PATH=$APP_PATH
+    depends_on:
+      - "git_webhook"
+    env_file:
+      - .env
+    volumes:
+      - repo:/root/repo
+volumes:
+  repo:

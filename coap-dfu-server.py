@@ -1,11 +1,12 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python3
 import click
 import os
 import piccata
 import sys
 import logging
 import time
-sys.path.append(os.getcwd() + '/pc-nrfutil')
+from watchdog.observers import Observer
+from watchdog.events import PatternMatchingEventHandler
 
 from transport.tsocket import SocketTransport
 from nordicsemi.thread.dfu_thread import create_dfu_server
