@@ -1,6 +1,5 @@
 FROM debian:10
 
-ARG APP_PATH
 ARG REPO_URL
 ARG GIT_SSH_KEY
 ARG KEY_PATH
@@ -29,11 +28,6 @@ RUN  cd /tmp \
 
 RUN pip3 install pip --upgrade
 
-RUN pip3 install \
-      github-webhook \
-      nrfutil \
-      piccata
-
 RUN mkdir -p /root/.ssh
 RUN echo "${GIT_SSH_KEY}" > /root/.ssh/id_dfu_server \
     && chmod 600 /root/.ssh/id_dfu_server
@@ -45,7 +39,10 @@ RUN eval $(ssh-agent -s) && \
 RUN echo "${DFU_PUBLIC_KEY_C}" > ${KEY_PATH}/public.c
 RUN echo "${DFU_PRIVATE_KEY}"  > ${KEY_PATH}/private.pem
 
-RUN cd "${APP_PATH}" && make -j 2 pkg_signed
+RUN pip3 install \
+      sh \
+      github-webhook \
+      nrfutil
 
 COPY dfu-webhook-endpoint.py dfu-webhook-endpoint.py
 
