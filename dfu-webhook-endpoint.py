@@ -8,10 +8,17 @@ webhook = Webhook(app) # Defines '/postreceive' endpoint
 
 app_path = os.environ.get('APP_PATH')
 pkg_path = os.environ.get('PKG_PATH')
+repo_url = os.environ.get('REPO_URL')
+
+#sh.eval("$(ssh-agent -s)")
+#sh.ssh-add("/root/.ssh/id_dfu_server")
+print(sh.git('-C',  app_path, 'submodule', 'update', '--init', '--recursive'))
+if not os.path.exists(app_path):
+    ssh.git("clone", "--recursive", repo_url, "repo")
 
 if not os.path.exists(pkg_path):
     print('building!')
-    sh.make('-C', app_path, 'pkg_signed')
+    print(sh.make('-C', app_path, 'pkg_signed'))
 
 @app.route("/")        # Standard Flask endpoint
 def hello_world():
@@ -20,6 +27,9 @@ def hello_world():
 @webhook.hook()        # Defines a handler for the 'push' event
 def on_push(data):
     print("Got push with: {0}".format(data))
+    sh.git('-C',  app_path, 'fetch')
+    sh.git('-C',  app_path, 'reset --hard origin master')
+    sh.git('-C',  app_path, 'submodule', 'update', '--init', '--recursive')
     sh.make('-C', app_path, 'clean')
     sh.make('-C', app_path, 'pkg_signed')
 

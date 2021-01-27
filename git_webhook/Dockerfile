@@ -34,7 +34,7 @@ RUN echo "${GIT_SSH_KEY}" > /root/.ssh/id_dfu_server \
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 RUN eval $(ssh-agent -s) && \
       ssh-add /root/.ssh/id_dfu_server && \
-      git clone --recursive ${REPO_URL} repo
+      git clone ${REPO_URL} repo
 
 RUN echo "${DFU_PUBLIC_KEY_C}" > ${KEY_PATH}/public.c
 RUN echo "${DFU_PRIVATE_KEY}"  > ${KEY_PATH}/private.pem

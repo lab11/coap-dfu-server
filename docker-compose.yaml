@@ -38,5 +38,6 @@ services:
       - .env
     volumes:
       - repo:/root/repo
+    restart: always
 volumes:
   repo:
