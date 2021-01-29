@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python3 coap-dfu-server.py -pkg $PKG_PATH
+python3 dfu-server-manager.py $PKG_PATH

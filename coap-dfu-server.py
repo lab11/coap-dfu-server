@@ -5,14 +5,12 @@ import piccata
 import sys
 import logging
 import time
-from watchdog.observers import Observer
-from watchdog.events import PatternMatchingEventHandler
+
+#logging.basicConfig(format='%(asctime)s %(message)s', level=2)
 
 from transport.tsocket import SocketTransport
 from nordicsemi.thread.dfu_thread import create_dfu_server
 from nordicsemi.dfu.package import Package
-
-logging.basicConfig(format='%(asctime)s %(message)s', level=2)
 
 def pause():
     while True:

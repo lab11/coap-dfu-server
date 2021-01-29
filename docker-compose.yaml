@@ -30,8 +30,8 @@ services:
       dockerfile: "dfu_server/Dockerfile"
       network: host
     ports:
-      - "5683:5683"
-      - "5684:5684"
+      - "5683:5683/udp"
+      - "5684:5684/udp"
     depends_on:
       - "git_webhook"
     env_file:

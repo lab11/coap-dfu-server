@@ -2,6 +2,7 @@ from github_webhook import Webhook
 from flask import Flask
 import sh
 import os
+import subprocess
 
 app = Flask(__name__)  # Standard Flask app
 webhook = Webhook(app) # Defines '/postreceive' endpoint
@@ -12,7 +13,7 @@ repo_url = os.environ.get('REPO_URL')
 
 #sh.eval("$(ssh-agent -s)")
 #sh.ssh-add("/root/.ssh/id_dfu_server")
-print(sh.git('-C',  app_path, 'submodule', 'update', '--init', '--recursive'))
+subprocess.run("./webhook_rebuild.sh")
 if not os.path.exists(app_path):
     ssh.git("clone", "--recursive", repo_url, "repo")
 
@@ -27,11 +28,7 @@ def hello_world():
 @webhook.hook()        # Defines a handler for the 'push' event
 def on_push(data):
     print("Got push with: {0}".format(data))
-    sh.git('-C',  app_path, 'fetch')
-    sh.git('-C',  app_path, 'reset --hard origin master')
-    sh.git('-C',  app_path, 'submodule', 'update', '--init', '--recursive')
-    sh.make('-C', app_path, 'clean')
-    sh.make('-C', app_path, 'pkg_signed')
+    subprocess.run("./webhook_rebuild.sh")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80)

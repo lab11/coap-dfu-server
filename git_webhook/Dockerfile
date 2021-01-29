@@ -1,5 +1,7 @@
 FROM debian:10
 
+ENV PYTHONUNBUFFERED=1
+
 ARG REPO_URL
 ARG GIT_SSH_KEY
 ARG KEY_PATH
@@ -45,5 +47,7 @@ RUN pip3 install \
       nrfutil
 
 COPY dfu-webhook-endpoint.py dfu-webhook-endpoint.py
+COPY webhook_entrypoint.sh webhook_entrypoint.sh
+COPY webhook_rebuild.sh webhook_rebuild.sh
 
-ENTRYPOINT ["python3", "dfu-webhook-endpoint.py"]
+ENTRYPOINT ["./webhook_entrypoint.sh"]
