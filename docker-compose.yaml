@@ -5,8 +5,7 @@ services:
     container_name: "git_webhook"
     hostname: "webhook"
     build:
-      context: .
-      dockerfile: git_webhook/Dockerfile
+      context: "git_webhook/"
       network: host
       args:
         - REPO_URL
@@ -32,8 +31,7 @@ services:
     container_name: "dfu_server"
     hostname: "dfu"
     build:
-      context: .
-      dockerfile: "dfu_server/Dockerfile"
+      context: "dfu_server/"
       network: host
     ports:
       - "5683:5683/udp"

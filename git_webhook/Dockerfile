@@ -46,8 +46,8 @@ RUN pip3 install \
       github-webhook \
       nrfutil
 
-COPY dfu-webhook-endpoint.py dfu-webhook-endpoint.py
-COPY webhook_entrypoint.sh webhook_entrypoint.sh
-COPY webhook_rebuild.sh webhook_rebuild.sh
+COPY git_webhook_server.py git_webhook_server.py
+COPY git_webhook_entrypoint.sh git_webhook_entrypoint.sh
+COPY git_webhook_rebuild.sh git_webhook_rebuild.sh
 
 ENTRYPOINT ["./webhook_entrypoint.sh"]

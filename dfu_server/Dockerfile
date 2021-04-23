@@ -23,8 +23,8 @@ RUN pip3 install \
       click \
       nrfutil
 
-COPY dfu-server-manager.py dfu-server-manager.py
-COPY coap-dfu-server.py coap-dfu-server.py
+COPY dfu_server_manager.py dfu_server_manager.py
+COPY dfu_server.py dfu_server.py
 COPY dfu_entrypoint.sh  dfu_entrypoint.sh
 
 ENTRYPOINT ["./dfu_entrypoint.sh"]
