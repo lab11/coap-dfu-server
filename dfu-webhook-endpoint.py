@@ -28,7 +28,8 @@ def hello_world():
 @webhook.hook()        # Defines a handler for the 'push' event
 def on_push(data):
     print("Got push with: {0}".format(data))
-    subprocess.run("./webhook_rebuild.sh")
+    if 'ref' in data and data['ref'] == 'refs/heads/master':
+        subprocess.run("./webhook_rebuild.sh")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80)

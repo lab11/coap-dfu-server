@@ -21,6 +21,12 @@ services:
       - .env
     volumes:
       - repo:/root/repo
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
 
   dfu_server:
     container_name: "dfu_server"
@@ -39,5 +45,12 @@ services:
     volumes:
       - repo:/root/repo
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
+
 volumes:
   repo:
+

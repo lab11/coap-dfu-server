@@ -5,16 +5,31 @@ import piccata
 import sys
 import logging
 import time
+import threading
 
 #logging.basicConfig(format='%(asctime)s %(message)s', level=2)
-
+import transport
 from transport.tsocket import SocketTransport
 from nordicsemi.thread.dfu_thread import create_dfu_server
 from nordicsemi.dfu.package import Package
 
+def excepthook():
+    raise RuntimeError
+
+threading.excepthook = excepthook
+
 def pause():
     while True:
         time.sleep(5)
+        # check that listener thread is still running
+        good = False
+        for t in threading.enumerate():
+            if type(t) is transport.tsocket.ListenerThread:
+                good = True
+        # if there is no active listener thread
+        if not good:
+            raise RuntimeError
+
 @click.command(short_help="Update the firmware on a device over an IP connection.")
 @click.option('-pkg', '--package',
               help='Filename of the DFU package.',
@@ -48,6 +63,7 @@ def start_server(package, server_port, mcast_dfu, rate, reset_suppress):
         transport.open()
         pause()
     except Exception as e:
+        transport.close()
         print(e)
 
 if __name__ == '__main__':

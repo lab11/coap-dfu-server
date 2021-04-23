@@ -7,24 +7,16 @@ import subprocess
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-def pause():
-    while True:
-        time.sleep(1)
-
 class MyHandler(FileSystemEventHandler):
-    def __init__(self, path_of_interest, port, process):
-        self.path = path_of_interest
-        self.port = port
-        self.process = process
+    def __init__(self, server_instance):
+        self.server = server_instance
 
     def on_created(self, event):
-        if self.path in event.src_path:
+        if self.server.package in event.src_path:
             print(f'Created event type: {event.event_type}  path : {event.src_path}')
-            self.process.kill()
-            self.process = subprocess.Popen(("python3 coap-dfu-server.py -pkg " + self.path + " -sp " + str(self.port)).split(' '), stdout=sys.stdout)
+            self.server.process.kill()
+            self.server._start_process()
 
-    def exit(self):
-        self.process.kill()
 
 class dfuServerManager():
 
@@ -33,20 +25,31 @@ class dfuServerManager():
         self.port = server_port
         self.path = '/'.join(self.package.split('/')[:-2])
 
+    def pause(self):
+        while True:
+            time.sleep(1)
+            poll = self.process.poll()
+            if poll is not None:
+                print("Restarting server process!")
+                self._start_process()
+
+    def _start_process(self):
+        self.process = subprocess.Popen(("python3 coap-dfu-server.py -pkg " + self.package + " -sp " + str(self.port)).split(' '), stdout=sys.stdout)
+
     def start_server(self):
-        # start process
-        server_process = subprocess.Popen(("python3 coap-dfu-server.py -pkg " + self.package + " -sp " + str(self.port)).split(' '), stdout=sys.stdout)
-        event_handler = MyHandler(self.package, self.port, server_process)
+        self._start_process()
+
+        event_handler = MyHandler(self)
         self.observer = Observer()
         self.observer.schedule(event_handler, self.path, recursive=True)
         self.observer.start()
 
         try:
-            pause()
+            self.pause()
         except Exception as e:
             self.observer.stop()
             print(e)
-        event_handler.exit()
+        self.process.kill()
         self.observer.join()
 
 if __name__ == '__main__':
