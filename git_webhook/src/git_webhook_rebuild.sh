@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd $APP_PATH
+pwd
 git fetch
 git fetch --tags -f
 git reset --hard origin/master

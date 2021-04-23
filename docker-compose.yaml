@@ -19,7 +19,7 @@ services:
     env_file:
       - .env
     volumes:
-      - repo:/root/repo
+      - repo:/app/repo
     restart: always
     logging:
       driver: "json-file"
@@ -41,7 +41,7 @@ services:
     env_file:
       - .env
     volumes:
-      - repo:/root/repo
+      - repo:/app/repo
     restart: always
     logging:
       driver: "json-file"
