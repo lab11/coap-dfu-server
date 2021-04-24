@@ -34,7 +34,7 @@ class dfuServerManager():
                 self._start_process()
 
     def _start_process(self):
-        self.process = subprocess.Popen(("python3 coap-dfu-server.py -pkg " + self.package + " -sp " + str(self.port)).split(' '), stdout=sys.stdout)
+        self.process = subprocess.Popen(("python3 dfu_server.py -pkg " + self.package + " -sp " + str(self.port)).split(' '), stdout=sys.stdout)
 
     def start_server(self):
         self._start_process()
