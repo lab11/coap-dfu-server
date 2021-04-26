@@ -2,12 +2,6 @@ FROM debian:10
 
 ENV PYTHONUNBUFFERED=1
 
-ARG REPO_URL
-ARG GIT_SSH_KEY
-ARG KEY_PATH
-ARG DFU_PUBLIC_KEY_C
-ARG DFU_PRIVATE_KEY
-
 WORKDIR /root/
 
 RUN apt-get update && apt-get upgrade -y
@@ -33,6 +27,8 @@ RUN  cd /tmp \
 
 RUN pip3 install pip --upgrade
 
+ARG REPO_URL
+ARG GIT_SSH_KEY
 RUN mkdir -p /root/.ssh
 RUN echo "${GIT_SSH_KEY}" > /root/.ssh/id_dfu_server \
     && chmod 600 /root/.ssh/id_dfu_server
@@ -41,6 +37,9 @@ RUN eval $(ssh-agent -s) && \
       ssh-add /root/.ssh/id_dfu_server && \
       git clone ${REPO_URL} /app/repo
 
+ARG DFU_PUBLIC_KEY_C
+ARG DFU_PRIVATE_KEY
+ARG KEY_PATH
 RUN echo "${DFU_PUBLIC_KEY_C}" > ${KEY_PATH}/public.c
 RUN echo "${DFU_PRIVATE_KEY}"  > ${KEY_PATH}/private.pem
 

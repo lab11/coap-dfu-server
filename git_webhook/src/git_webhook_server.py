@@ -11,6 +11,7 @@ webhook = Webhook(app) # Defines '/postreceive' endpoint
 app_path = os.environ.get('APP_PATH')
 pkg_path = os.environ.get('PKG_PATH')
 repo_url = os.environ.get('REPO_URL')
+branch   = os.environ.get('BRANCH')
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 
@@ -18,7 +19,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 #sh.ssh-add("/root/.ssh/id_dfu_server")
 subprocess.run("./git_webhook_rebuild.sh", cwd=cwd)
 if not os.path.exists(app_path):
-    ssh.git("clone", "--recursive", repo_url, "repo")
+    sh.git("clone", "--recursive", repo_url, "repo")
 
 if not os.path.exists(pkg_path):
     print('building!')
@@ -31,7 +32,7 @@ def hello_world():
 @webhook.hook()        # Defines a handler for the 'push' event
 def on_push(data):
     print("Got push with: {0}".format(data))
-    if 'ref' in data and data['ref'] == 'refs/heads/master':
+    if 'ref' in data and data['ref'] == 'refs/heads/' + branch:
         if on_push.p is not None:
             if on_push.p.poll() is None:
                 os.killpg(os.getpgid(on_push.p.pid), signal.SIGTERM)
