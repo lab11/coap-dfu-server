@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -e
 
 cd $APP_PATH
 pwd
@@ -8,4 +8,5 @@ git reset --hard origin/master
 git submodule update --init --recursive
 make clean
 make pkg_signed
-exit 0
+
+wait
