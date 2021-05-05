@@ -15,7 +15,9 @@ for a repo. Need to generate keys for image signing/verification with `nrfutil`.
 To build:
 ```
 sudo docker-compose build \
-       --build-arg GIT_SSH_KEY="$(cat <path to deploy key>)" \
+       --build-arg GIT_SSH_KEY="$(cat <path to deploy ssh key>)" \
        --build-arg DFU_PUBLIC_KEY_C="$(cat <path to public.c>)" \
        --build-arg DFU_PRIVATE_KEY="$(cat <path to private.pem>)"
 ```
+
+Configure the docker image with variables in `.env`.
