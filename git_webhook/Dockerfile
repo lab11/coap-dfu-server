@@ -1,4 +1,4 @@
-FROM debian:10
+FROM debian:11
 
 ENV PYTHONUNBUFFERED=1
 
@@ -14,7 +14,6 @@ RUN apt-get install -y \
       python3 \
       python3-pip \
       python3-protobuf \
-      python-protobuf \
       libatlas-base-dev \
       nginx \
       supervisor

@@ -1,4 +1,4 @@
-FROM debian:10
+FROM debian:11
 #FROM alpine:3
 
 ENV PYTHONUNBUFFERED=1
